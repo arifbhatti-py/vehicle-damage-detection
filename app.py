@@ -9,6 +9,7 @@ if uploaded_file:
     image_path = "temp_file.jpg"
     with open(image_path, "wb") as f:
         f.write(uploaded_file.getbuffer())
+    uploaded_file.seek(0)
     st.image(uploaded_file, caption="Uploaded File", use_container_width=True)
     prediction = predict(image_path)
     st.info(f"Predicted Class: {prediction}")
