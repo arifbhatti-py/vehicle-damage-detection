@@ -1,25 +1,22 @@
 import streamlit as st
 from PIL import Image
-import io
-import os
 from model_helper import predict
 
 st.title("Vehicle Damage Detection")
 
-uploaded_file = st.file_uploader("Upload", type=["jpg", "png"])
+uploaded_file = st.file_uploader("Upload", type=["jpg", "jpeg", "png"])
 
 if uploaded_file is not None:
+
+    # Display the uploaded image
+    image = Image.open(uploaded_file)
+    st.image(image, caption="Uploaded File", width="stretch")
+
+    # Save the uploaded image temporarily for prediction
     image_path = "temp_file.jpg"
-    
-    image_bytes = uploaded_file.getvalue()
-    with open(image_path, "wb") as f:
-        f.write(image_bytes)
-    
-    display_image = Image.open(io.BytesIO(image_bytes))
-    st.image(display_image, caption="Uploaded File", use_container_width=True)
-    
+    image.save(image_path, format="JPEG")
+
+    # Predict vehicle damage
     prediction = predict(image_path)
+
     st.info(f"Predicted Class: {prediction}")
-    
-    if os.path.exists(image_path):
-        os.remove(image_path)
