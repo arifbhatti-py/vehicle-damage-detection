@@ -1,0 +1,28 @@
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables
+.env
+
+# VS Code
+.vscode/
+
+# Streamlit specific
+.streamlit/
+
+# Temporary files (jo app.py banata hai)
+temp.jpg
+temp_file.jpg
+
+# Dataset (Agar future mein download ho)
+dataset/
+*.zip
