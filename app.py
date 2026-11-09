@@ -10,8 +10,10 @@ uploaded_file = st.file_uploader("Upload", type=["jpg", "png"])
 if uploaded_file is not None:
     image_path = "temp_file.jpg"
     
-    image = Image.open(uploaded_file)
-    st.image(image, caption="Uploaded File", use_container_width=True)
+    uploaded_file.seek(0)
+    image = Image.open(uploaded_file).convert("RGB")
+    
+    st.image(image, caption="Uploaded File", use_column_width=True)
     
     image.save(image_path)
     
