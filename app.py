@@ -1,4 +1,6 @@
 import streamlit as st
+from PIL import Image
+import io
 import os
 import base64
 from model_helper import predict
@@ -9,19 +11,24 @@ uploaded_file = st.file_uploader("Upload", type=["jpg", "png"])
 
 if uploaded_file is not None:
     image_path = "temp_file.jpg"
-    image_bytes = uploaded_file.getvalue()
     
-    with open(image_path, "wb") as f:
-        f.write(image_bytes)
-        
-    base64_image = base64.b64encode(image_bytes).decode('utf-8')
-    mime_type = "image/png" if uploaded_file.name.lower().endswith(".png") else "image/jpeg"
+    image = Image.open(uploaded_file)
     
-    html_img = f'<img src="data:{mime_type};base64,{base64_image}" style="width:100%; border-radius: 10px;">'
+    image.thumbnail((800, 800)) 
+    
+    image.save(image_path, format="JPEG")
+    
+    buffered = io.BytesIO()
+    image.save(buffered, format="JPEG")
+    img_str = base64.b64encode(buffered.getvalue()).decode()
+    
+    html_img = f'<img src="data:image/jpeg;base64,{img_str}" style="width:100%; border-radius: 10px;">'
     st.markdown(html_img, unsafe_allow_html=True)
     st.caption("Uploaded File")
     
-    prediction = predict(image_path)
+    with st.spinner("Analyzing damage... Please wait."):
+        prediction = predict(image_path)
+        
     st.info(f"Predicted Class: {prediction}")
     
     if os.path.exists(image_path):
